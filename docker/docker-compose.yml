@@ -20,7 +20,9 @@ services:
     volumes:
       - ${DATA_DIR}/${PROFILE}/nextcloud:/var/www/html
     environment:
-      - MYSQL_HOST=db 
+      - MYSQL_HOST=db
+#      - OVERWRITEPROTOCOL=https
+      - OVERWRITEWEBROOT=/nextcloud-dev
     env_file:
       - db.env
     depends_on:
@@ -39,6 +41,7 @@ services:
       - "--entrypoints.websecure.address=:443"
       - "--providers.file.directory=/var/config"
       - "--providers.file.watch=true"
+      - "--accesslog=true"
     ports:
       - "80:80"
       - "8080:8080"
@@ -57,6 +60,7 @@ services:
       - app
     labels:
       - "traefik.enable=true"
+      - "traefik.http.routers.nextcloud.rule=Host(`localhost`) && Path(`/nextcloud-dev`)"
       - "traefik.http.routers.nextcloud.rule=Host(`localhost`)"
       - "traefik.http.routers.nextcloud.entrypoints=websecure"
       - "traefik.http.routers.nextcloud.tls"
