@@ -17,7 +17,7 @@ services:
   nextcloud:
     image: "nextcloud:20.0.3-apache"
 #    ports:
-#      - 8081:80
+#      - 80:80
     restart: unless-stopped
     volumes:
       - ${DATA_DIR}/${PROFILE}/nextcloud:/var/www/html
@@ -37,20 +37,6 @@ services:
       - "traefik.http.routers.nextcloud.entrypoints=websecure"
       - "traefik.http.routers.nextcloud.tls"
 
-
-#   app:
-#     image: ${NC_IMAGE}
-#     restart: unless-stopped
-#     volumes:
-#       - ${DATA_DIR}/${PROFILE}/nextcloud:/var/www/html
-#     environment:
-#       - MYSQL_HOST=db
-# #      - OVERWRITEPROTOCOL=https
-#       - OVERWRITEWEBROOT=/nextcloud-dev
-#     env_file:
-#       - db.env
-#     depends_on:
-#       - db
 
   traefik:
     image: "traefik:v2.3"
@@ -72,26 +58,3 @@ services:
       - ${HTTPS_PORT}:${HTTPS_PORT}
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-    
-#   web:
-#     build: ./web
-#     restart: unless-stopped
-#     volumes:
-#       - ${DATA_DIR}/${PROFILE}/nextcloud:/var/www/html:ro
-#     # ports:
-#     #   - 80:80
-#     depends_on:
-#       - app
-#     labels:
-#       - "traefik.enable=true"
-#       - "traefik.http.routers.nextcloud.rule=Host(`localhost`) && Path(`/nextcloud-dev`)"
-#       - "traefik.http.routers.nextcloud.rule=Host(`localhost`)"
-#       - "traefik.http.routers.nextcloud.entrypoints=websecure"
-#       - "traefik.http.routers.nextcloud.tls"
-# #      - "traefik.http.routers.nextcloud-secure.entrypoints=websecure"
-# #      - "traefik.http.routers.nextcloud-secure.tls"
-
-# networks:
-#   default:
-#     external:
-#       name: traefik-deploy_default
