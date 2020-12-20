@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 
 services:
   db:
@@ -13,7 +13,9 @@ services:
     #   - "3406:3306"
     env_file:
       - db.env
-
+    networks:
+      - traefik_web  
+  
   nextcloud:
     image: "nextcloud:20.0.3-apache"
 #    ports:
@@ -31,30 +33,39 @@ services:
       - db.env
     depends_on:
       - db
+    networks:
+      - traefik_web  
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.nextcloud.rule=Host(`${DOMAIN_NAME}`)"
-      - "traefik.http.routers.nextcloud.entrypoints=websecure"
+      - "traefik.http.routers.nextcloud.entrypoints=websecure-${PROFILE}"
       - "traefik.http.routers.nextcloud.tls"
 
 
-  traefik:
-    image: "traefik:v2.3"
-    restart: unless-stopped
-    container_name: "traefik"
-    command:
-      #- "--log.level=DEBUG"
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:${HTTPS_PORT}"
-      - "--providers.file.directory=/var/config"
-      - "--providers.file.watch=true"
-      - "--accesslog=true"
-    ports:
-      - "80:80"
-      - "8080:8080"
-      - ${HTTPS_PORT}:${HTTPS_PORT}
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+  # traefik:
+  #   image: "traefik:v2.3"
+  #   restart: unless-stopped
+  #   container_name: "traefik"
+  #   command:
+  #     #- "--log.level=DEBUG"
+  #     - "--api.insecure=true"
+  #     - "--providers.docker=true"
+  #     - "--providers.docker.exposedbydefault=false"
+  #     - "--entrypoints.web.address=:80"
+  #     - "--entrypoints.websecure-dev.address=:444"
+  #     - "--entrypoints.websecure-test.address=:446"
+  #     - "--providers.file.directory=/var/config"
+  #     - "--providers.file.watch=true"
+  #     - "--accesslog=true"
+  #   ports:
+  #     - "80:80"
+  #     - "8080:8080"
+  #     - "444:444"
+  #     - "446:446"
+  #   volumes:
+  #     - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+networks:
+  traefik_web:
+    external: true
+  
