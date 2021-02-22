@@ -17,7 +17,7 @@ services:
       - traefik_web  
   
   nextcloud:
-    image: "nextcloud:20.0.3-apache"
+    image: ${NC_IMAGE}
 #    ports:
 #      - 80:80
     restart: unless-stopped
@@ -39,7 +39,8 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.nextcloud.rule=Host(`${DOMAIN_NAME}`)"
       - "traefik.http.routers.nextcloud.entrypoints=websecure-${PROFILE}"
-      - "traefik.http.routers.nextcloud.tls"
+      - "traefik.http.routers.nextcloud.tls=true"
+      - "traefik.http.routers.nextcloud.tls.certresolver=leresolver"
 
 
   # traefik:
