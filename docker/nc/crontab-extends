@@ -1,0 +1,4 @@
+0 * * * * /usr/local/bin/php -f /var/www/html/occ preview:pre-generate
+*/5 * * * * /bin/echo `date` >> /tmp/crontrace
+*/5 * * * * /usr/local/bin/php -f /var/www/html/cron.php
+

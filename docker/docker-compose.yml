@@ -17,12 +17,17 @@ services:
       - traefik_web  
   
   nextcloud:
-    image: ${NC_IMAGE}
+    build:
+      context: nc/
+      args:
+        NC_IMAGE: ${NC_IMAGE}
 #    ports:
 #      - 80:80
     restart: unless-stopped
     volumes:
       - ${DATA_DIR}/${PROFILE}/nextcloud:/var/www/html
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
     environment:
       - MYSQL_HOST=db
       - OVERWRITEPROTOCOL=https
