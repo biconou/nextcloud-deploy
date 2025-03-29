@@ -9,4 +9,4 @@ fi
 
 docker-compose -f ${COMPOSE_FILE} --project-name nextcloud-${1} --env-file .env.${1} stop nextcloud
 
-docker-compose -f ${COMPOSE_FILE} --project-name nextcloud-${1} --env-file .env.${1} up nextcloud
+docker-compose -f ${COMPOSE_FILE} --project-name nextcloud-${1} --env-file .env.${1} up -d nextcloud
