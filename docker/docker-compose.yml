@@ -25,7 +25,7 @@ services:
 #      - 80:80
     restart: unless-stopped
     volumes:
-      - ${DATA_DIR}/${PROFILE}/nextcloud:/var/www/html
+      - ${DATA_DIR}/${PROFILE}/nextcloud:/var/www/html:z
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
     environment:
@@ -53,10 +53,14 @@ services:
       args:
         NC_IMAGE: ${NC_IMAGE}
     restart: unless-stopped
+    environment:
+      - MYSQL_HOST=db
     volumes:
       - ${DATA_DIR}/${PROFILE}/nextcloud:/var/www/html:z
       # NOTE: The `volumes` config of the `cron` and `app` containers must match
     entrypoint: /cron.sh
+    env_file:
+      - db.env
     depends_on:
       - db
 
