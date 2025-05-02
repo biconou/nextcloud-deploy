@@ -47,29 +47,18 @@ services:
       - "traefik.http.routers.nextcloud.tls=true"
       - "traefik.http.routers.nextcloud.tls.certresolver=leresolver"
 
-
-  # traefik:
-  #   image: "traefik:v2.3"
-  #   restart: unless-stopped
-  #   container_name: "traefik"
-  #   command:
-  #     #- "--log.level=DEBUG"
-  #     - "--api.insecure=true"
-  #     - "--providers.docker=true"
-  #     - "--providers.docker.exposedbydefault=false"
-  #     - "--entrypoints.web.address=:80"
-  #     - "--entrypoints.websecure-dev.address=:444"
-  #     - "--entrypoints.websecure-test.address=:446"
-  #     - "--providers.file.directory=/var/config"
-  #     - "--providers.file.watch=true"
-  #     - "--accesslog=true"
-  #   ports:
-  #     - "80:80"
-  #     - "8080:8080"
-  #     - "444:444"
-  #     - "446:446"
-  #   volumes:
-  #     - "/var/run/docker.sock:/var/run/docker.sock:ro"
+  cron:
+    build:
+      context: nc/
+      args:
+        NC_IMAGE: ${NC_IMAGE}
+    restart: unless-stopped
+    volumes:
+      - ${DATA_DIR}/${PROFILE}/nextcloud:/var/www/html:z
+      # NOTE: The `volumes` config of the `cron` and `app` containers must match
+    entrypoint: /cron.sh
+    depends_on:
+      - db
 
 networks:
   traefik_web:
