@@ -63,6 +63,8 @@ services:
       - db.env
     depends_on:
       - db
+    networks:
+      - traefik_web
 
 networks:
   traefik_web:
