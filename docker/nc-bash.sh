@@ -7,5 +7,5 @@ NC_CONTAINER=`docker ps --format '{{.Names}}' | grep -E 'nextcloud-.+[_-]nextclo
 echo ${NC_CONTAINER}
 
 echo $@
-docker exec -it ${NC_CONTAINER} bash -c "$@"
+docker exec -u www-data -it ${NC_CONTAINER} bash -c "$@"
  
